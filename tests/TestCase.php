@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace VendorName\Skeleton\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -8,22 +10,6 @@ use VendorName\Skeleton\SkeletonServiceProvider;
 
 class TestCase extends Orchestra
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'VendorName\\Skeleton\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
-    }
-
-    protected function getPackageProviders($app)
-    {
-        return [
-            SkeletonServiceProvider::class,
-        ];
-    }
-
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
@@ -33,5 +19,21 @@ class TestCase extends Orchestra
             (include $migration->getRealPath())->up();
          }
          */
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Factory::guessFactoryNamesUsing(
+            fn (string $modelName) => 'VendorName\\Skeleton\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
+        );
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [
+            SkeletonServiceProvider::class,
+        ];
     }
 }
