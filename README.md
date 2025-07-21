@@ -1,68 +1,81 @@
-# :package_description
+# Filament DevUser
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-<!--delete-->
----
-This repo can be used to scaffold a Laravel package. Follow these steps to get started:
+![Package Banner](.github/banner.png)
 
-1. Press the "Use this template" button at the top of this repo to create a new repo with the contents of this skeleton.
-2. Run "php ./configure.php" to run a script that will replace all placeholders throughout all the files.
-3. Have fun creating your package.
-4. If you need help creating a package, consider picking up our <a href="https://laravelpackage.training">Laravel Package Training</a> video course.
----
-<!--/delete-->
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/g4b0rdev/filament-dev-user.svg?style=flat-square)](https://packagist.org/packages/g4b0rdev/filament-dev-user)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/g4b0rdev/filament-dev-user/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/g4b0rdev/filament-dev-user/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/g4b0rdev/filament-dev-user/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/g4b0rdev/filament-dev-user/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/g4b0rdev/filament-dev-user.svg?style=flat-square)](https://packagist.org/packages/g4b0rdev/filament-dev-user)
 
-## Support us
+This package provides a simple way to create a development user for Filament Admin Panel in Laravel applications.
+It allows you to quickly set up an admin user with predefined credentials for testing and development purposes.
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/:package_name.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/:package_name)
+> **Note:** This package is intended for development and testing purposes only. It should not be used in production environments.
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+> **Warning:** This package is under active development and may change in future releases. Please use it with caution.
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require :vendor_slug/:package_slug
+composer require g4b0rdev/filament-dev-user --dev
 ```
 
-You can publish and run the migrations with:
+## Configuration
 
-```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
-php artisan migrate
+Define the user credentials in your `.env` file:
+
+```dotenv
+FILAMENT_ADMIN_EMAIL=""
+FILAMENT_ADMIN_PASSWORD=""
+FILAMENT_ADMIN_NAME=""
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-config"
+php artisan vendor:publish --tag="filament-dev-user-config"
 ```
 
 This is the contents of the published config file:
 
 ```php
+<?php
+
+declare(strict_types=1);
+
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | Test User Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configure the default admin user credentials that will be created
+    | automatically when running migrations in local or testing environments.
+    |
+    */
+    'user' => [
+        'admin_email' => env('FILAMENT_ADMIN_EMAIL', 'test@example.com'),
+        'admin_password' => env('FILAMENT_ADMIN_PASSWORD', 'password'),
+        'admin_name' => env('FILAMENT_ADMIN_NAME', 'admin'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | User Model Configuration
+    |--------------------------------------------------------------------------
+    */
+    'user_model' => App\Models\User::class,
 ];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag=":package_slug-views"
 ```
 
 ## Usage
 
-```php
-$variable = new VendorName\Skeleton();
-echo $variable->echoPhrase('Hello, VendorName!');
+On every `migrate` command the package will check if the user exists, and if not, it will create a new user with the credentials defined in the config file.
+
+```sh
+php artisan migrate
 ```
 
 ## Testing
@@ -85,7 +98,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [:author_name](https://github.com/:author_username)
+- [G4b0rDev](https://github.com/G4b0rDev)
 - [All Contributors](../../contributors)
 
 ## License
