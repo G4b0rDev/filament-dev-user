@@ -2,38 +2,38 @@
 
 declare(strict_types=1);
 
-namespace VendorName\Skeleton\Tests;
+namespace G4b0rDev\FilamentDevUser\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Filament\FilamentServiceProvider;
+use G4b0rDev\FilamentDevUser\FilamentDevUserServiceProvider;
+use Illuminate\Contracts\Config\Repository;
+use Livewire\LivewireServiceProvider;
+use Orchestra\Testbench\Attributes\WithEnv;
+use Orchestra\Testbench\Attributes\WithMigration;
 use Orchestra\Testbench\TestCase as Orchestra;
-use VendorName\Skeleton\SkeletonServiceProvider;
 
+#[WithEnv('DB_CONNECTION', 'testing')]
+#[WithMigration]
 class TestCase extends Orchestra
 {
-    public function getEnvironmentSetUp($app)
+    protected function defineEnvironment($app): void
     {
-        config()->set('database.default', 'testing');
-
-        /*
-         foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/database/migrations') as $migration) {
-            (include $migration->getRealPath())->up();
-         }
-         */
+        tap($app['config'], function (Repository $config) {
+            $config->set('filament-dev-user.user_model', TestUser::class);
+            $config->set('filament-dev-user.user.admin_name', 'Test Admin');
+            $config->set('filament-dev-user.user.admin_email', 'admin@test.com');
+            $config->set('filament-dev-user.user.admin_password', 'password123');
+            $config->set('auth.providers.users.model', TestUser::class);
+        });
     }
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'VendorName\\Skeleton\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
-        );
-    }
-
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
-            SkeletonServiceProvider::class,
+            FilamentServiceProvider::class,
+            LivewireServiceProvider::class,
+            AdminPanelProvider::class,
+            FilamentDevUserServiceProvider::class,
         ];
     }
 }
