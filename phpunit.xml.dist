@@ -16,13 +16,10 @@
     backupStaticProperties="false"
 >
     <testsuites>
-        <testsuite name="G4b0rDev Test Suite">
+        <testsuite name="Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-    <logging>
-        <junit outputFile="build/report.junit.xml"/>
-    </logging>
     <source>
         <include>
             <directory suffix=".php">./src</directory>
