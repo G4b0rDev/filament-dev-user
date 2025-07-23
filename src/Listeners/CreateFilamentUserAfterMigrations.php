@@ -44,11 +44,11 @@ class CreateFilamentUserAfterMigrations
         /** @var null|Model $user */
         $user = $this->userModel::where('email', config('filament-dev-user.user.admin_email'))->first();
 
-        if (! $user) {
+        if (! $user || ! $user->hasAttribute('email_verified_at')) {
             return;
         }
 
-        $user->setAttribute('email_verified', now());
+        $user->setAttribute('email_verified_at', now());
         $user->save();
     }
 }
