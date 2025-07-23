@@ -41,11 +41,14 @@ class CreateFilamentUserAfterMigrations
 
     protected function verifyUser(): void
     {
+        /** @var null|Model $user */
         $user = $this->userModel::where('email', config('filament-dev-user.user.admin_email'))->first();
 
-        if ($user) {
-            $user->email_verified_at = now();
-            $user->save();
+        if (! $user) {
+            return;
         }
+
+        $user->setAttribute('email_verified', now());
+        $user->save();
     }
 }
